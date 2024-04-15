@@ -154,7 +154,7 @@
             "deprecationReason": null
           },
           {
-            "name": "profileImageUrl",
+            "name": "profileImageURL",
             "description": null,
             "args": [],
             "type": {

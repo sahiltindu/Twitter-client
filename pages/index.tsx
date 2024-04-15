@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { graphqlClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
 import { useCurrentUser } from "@/hooks/user";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
@@ -59,11 +60,13 @@ icon: <BiHash />
 
 export default function Home() {
 
-  const { user } = useCurrentUser()
+  const { user } = useCurrentUser();
+  const queryClient = useQueryClient();
   console.log(user);
 
   const handleLoginWithGoogle = useCallback(async(cred:CredentialResponse) => {
     const googleToken = cred.credential;
+    
     if(!googleToken) return toast.error(`Google token not found`);
 
    const {verifyGoogleToken} = await graphqlClient.request(verifyUserGoogleTokenQuery,{token:googleToken});
@@ -71,8 +74,11 @@ export default function Home() {
     console.log(verifyGoogleToken);
 
     if(verifyGoogleToken) window.localStorage.setItem("__twitter_token",verifyGoogleToken);
+
+    await  queryClient.invalidateQueries({queryKey: ["curent-user"]});
   },
-  []
+
+  [queryClient]
  );
   return (
   <div >
@@ -95,6 +101,10 @@ export default function Home() {
         </div>
        
       </div>
+      <div>
+        
+        {user && user.profileImageURL&& <Image src={user?.profileImageURL} alt="user-image" height={50} width={50} />}
+      </div>
       </div>
       <div className="col-span-5 border-r-[1px] border-l-[1px] h-screen overflow-scroll border-gray-600 ">
         <FeedCard />
@@ -109,10 +119,10 @@ export default function Home() {
         <FeedCard />
       </div>
       <div className="col-span-3">
-        <div className="p-5 bg-slate-700 rounded-lg">
+        {!user &&( <div className="p-5 bg-slate-700 rounded-lg">
           <h1 className="my-2 text-2xl">New To Twitter ?</h1>
         <GoogleLogin onSuccess={handleLoginWithGoogle}/>
-        </div>
+        </div>)}
           
       </div>
     </div>
