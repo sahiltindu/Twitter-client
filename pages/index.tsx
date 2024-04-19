@@ -1,18 +1,17 @@
 import React, { use, useCallback, useState } from "react";
 import Image from "next/image";
-import { BsTwitter,BsBell, BsEnvelope, BsBookmark } from "react-icons/bs";
-import { BiHash, BiHomeCircle, BiImageAlt, BiMoney, BiUser } from "react-icons/bi";
+
+import { BiImageAlt } from "react-icons/bi";
 
 
-import { SlOptions } from "react-icons/sl";
+
 import FeedCard from "@/components/FeedCard";
-import toast from "react-hot-toast";
-import { graphqlClient } from "@/clients/api";
-import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
+
+
 import { useCurrentUser } from "@/hooks/user";
-import { useQueryClient } from "@tanstack/react-query";
+
 import { useCreateTweet, useGetAllTweets } from "@/hooks/tweet";
-import { FcFeedback } from "react-icons/fc";
+
 import { Tweet } from "@/gql/graphql";
 import Twitterlayout from "@/components/FeedCard/Layout/TwitterLayout";
 
